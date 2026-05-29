@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: users-service
+  tag: v1.0
+  pullPolicy: IfNotPresent
+
+ingress:
+  enabled: true
+  host: users.emicorp.local
+
+config:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: emicorp_db

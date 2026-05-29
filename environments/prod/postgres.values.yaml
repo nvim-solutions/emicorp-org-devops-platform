@@ -1,0 +1,4 @@
+auth:
+  database: emicorp_prod_db
+  username: postgres
+  password: CHANGE_ME_IN_PROD

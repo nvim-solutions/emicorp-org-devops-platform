@@ -1,0 +1,15 @@
+replicaCount: 3
+
+image:
+  repository: ghcr.io/emicorp-org/users-service
+  tag: v1.0
+  pullPolicy: Always
+
+ingress:
+  enabled: true
+  host: users.emicorp.org
+
+config:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: emicorp_prod_db
