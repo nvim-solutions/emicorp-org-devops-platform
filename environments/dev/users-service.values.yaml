@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: ghcr.io/nvim-solutions/users-service
-  tag: "sha-3acb783"
+  tag: "sha-3cf4859"
   pullPolicy: IfNotPresent
 ingress:
   enabled: true
