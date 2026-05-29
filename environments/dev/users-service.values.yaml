@@ -1,14 +1,11 @@
 replicaCount: 1
-
 image:
   repository: ghcr.io/nvim-solutions/users-service
-  tag: "0.1.0"
+  tag: "sha-15ae39c"
   pullPolicy: IfNotPresent
-
 ingress:
   enabled: true
   host: users.emicorp.local
-
 config:
   DB_HOST: postgres
   DB_PORT: "5432"
