@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
-matadata: 
+metadata: 
   name: emicorp
   namespace: argocd
 spec:
   description: Emicorp platform applications
   sourceRepos:
     - https://github.com/nvim-solutions/emicorp-org-devops-platform.git
-    - https://github.com/nvim-solutions/emicorp-org-devops-spring-users-service.git\
+    - https://github.com/nvim-solutions/emicorp-org-devops-spring-users-service.git
   destinations:
     - namespace: default
       server: https://kubernetes.default.svc
