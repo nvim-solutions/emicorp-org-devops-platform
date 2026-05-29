@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: users-service-dev
+  namespace: argocd
+spec:
+  project: emicorp
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  sources:
+    - repoURL: https://github.com/nvim-solutions/emicorp-org-devops-helm-users-service.git
+      targetRevision: main
+      path: .
+      helm:
+        valueFiles:
+          - $values/environments/dev/users-service.values.yaml
+    - repoURL: https://github.com/nvim-solutions/emicorp-org-devops-platform.git
+      targetRevision: main
+      ref: values
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
