@@ -1,0 +1,41 @@
+name: CI - Validate Platform Charts and Environments
+
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs: 
+  validate: 
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v4
+    
+    - name: Set up Helm
+      uses: azure/setup-helm@v4
+      with: 
+        version: v3.16.0
+
+    - name: Install kubecoform
+      run: |
+        curl -sSLO https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+        tar xf kubeconform-linux-amd64.tar.gz
+        sudo mv kubeconform /usr/local/bin/
+
+    - name: Lint postgres chart 
+      run: helm lint charts/postgres
+
+    - name: Render and validate postgres per environment 
+      run: |
+          set -euo pipefail
+          for env in dev prod; do
+            echo "::group::Rendering postgres for $env"
+            helm template postgres charts/postgres \
+              -f environments/$env/postgres.values.yaml \
+              > rendered-postgres-$env.yaml
+            kubeconform -strict -summary rendered-postgres-$env.yaml
+            echo "::endgroup::"
+          done

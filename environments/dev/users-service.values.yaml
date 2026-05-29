@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: users-service
-  tag: v1.0
+  repository: ghcr.io/nvim-solutions/users-service
+  tag: "0.1.0"
   pullPolicy: IfNotPresent
 
 ingress:
