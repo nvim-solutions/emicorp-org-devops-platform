@@ -1,0 +1,46 @@
+name: Auto-PR for image-updater branches
+
+on:
+  push:
+    branches:
+      - 'image-updater/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Open PR (or reuse existing) and enable auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          echo "Branch: $BRANCH"
+
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+
+          if [[ -n "$EXISTING_PR" ]]; then
+            echo "PR #$EXISTING_PR already open for $BRANCH"
+            PR_NUMBER="$EXISTING_PR"
+          else
+            PR_NUMBER=$(gh pr create \
+              --head "$BRANCH" \
+              --base main \
+              --title "chore(dev): image-updater bump" \
+              --body "Automated bump from ArgoCD Image Updater. Branch: \`$BRANCH\`" \
+              --label "automated" \
+              --label "image-updater" \
+              | grep -oE '[0-9]+$')
+            echo "Created PR #$PR_NUMBER"
+          fi
+
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+          echo "Auto-merge enabled for PR #$PR_NUMBER"
