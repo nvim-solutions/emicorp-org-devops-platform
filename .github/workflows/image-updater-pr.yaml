@@ -19,6 +19,7 @@ jobs:
       - name: Open PR (or reuse existing) and enable auto-merge
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
 
